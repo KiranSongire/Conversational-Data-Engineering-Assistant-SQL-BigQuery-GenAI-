@@ -1,0 +1,7 @@
+streamlit
+python-dotenv==1.0.0
+sqlalchemy
+langchain==0.1.16
+langchain-community
+langchain-google-genai
+google-generativeai
