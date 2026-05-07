@@ -17,7 +17,7 @@ load_dotenv()
 st.title("DataOps SQL Copilot - Fast Mode")
 
 llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
+    model="gemini-flash-lite-latest",
     google_api_key=os.getenv("GOOGLE_API_KEY"),
     temperature=0
 )
@@ -44,16 +44,21 @@ question = st.text_input("Ask your question:")
 
 if question:
     prompt = f"""
-You are a SQL assistant.
+You are a SQLite SQL assistant.
 
-Convert the user question into SQLite SQL only.
-Do not explain.
-Do not use markdown.
-Only return SQL.
+Generate ONLY SQLite SQL query.
+No explanation.
+No markdown.
+
+IMPORTANT:
+- status values are uppercase: 'SUCCESS', 'FAILED', 'RUNNING'
+- check_status values are uppercase: 'PASS', 'FAIL'
+- severity values are uppercase: 'HIGH', 'MEDIUM', 'LOW'
 
 {schema}
 
-Question: {question}
+Question:
+{question}
 """
 
     with st.spinner("Generating SQL..."):
@@ -65,6 +70,15 @@ Question: {question}
     try:
         conn = sqlite3.connect("dataops_demo.db")
         cursor = conn.cursor()
+        sql = sql.replace("'failed'", "'FAILED'")
+        sql = sql.replace("'running'", "'RUNNING'")
+        sql = sql.replace("'success'", "'SUCCESS'")
+        sql = sql.replace("'fail'", "'FAIL'")
+        sql = sql.replace("'pass'", "'PASS'")
+        sql = sql.replace("'high'", "'HIGH'")
+        sql = sql.replace("'medium'", "'MEDIUM'")
+        sql = sql.replace("'low'", "'LOW'")
+        
         cursor.execute(sql)
         rows = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]

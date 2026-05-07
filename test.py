@@ -1,8 +1,8 @@
 import google.generativeai as genai
 
-genai.configure(api_key="YOUR_API_KEY")
+genai.configure(api_key="AIzaSyBsfvz4EqgftsKqhriSS5RCSBGUaTQv9Ro")
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-flash-lite-latest")
 
 response = model.generate_content("Hello")
 
